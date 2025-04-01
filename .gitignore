@@ -1,0 +1,22 @@
+# Ignore the out directory (compiled files)
+out/
+
+# Ignore IDE-specific files
+*.iml
+.idea/
+.vscode/
+
+# Ignore build tools directories
+target/
+build/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore compiled Java files
+*.class
