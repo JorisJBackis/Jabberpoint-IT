@@ -1,17 +1,10 @@
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextAttribute; // Still needed for AttributedString
+import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.image.ImageObserver;
 import java.text.AttributedString;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A Concrete Decorator that makes the text of a decorated TextItem appear bold.
@@ -31,12 +24,11 @@ public class BoldTextDecorator extends SlideItemDecorator {
     @Override
     public void draw(int x, int y, float scale, Graphics g, Style style, ImageObserver observer) {
         // Ensure we are decorating a TextItem
-        if (!(decoratedItem instanceof TextItem)) {
+        if (!(decoratedItem instanceof TextItem textItem)) {
             super.draw(x, y, scale, g, style, observer); // Just draw non-text items normally
             return;
         }
 
-        TextItem textItem = (TextItem) decoratedItem;
         String text = textItem.getText();
 
         if (text == null || text.length() == 0) {
@@ -67,8 +59,8 @@ public class BoldTextDecorator extends SlideItemDecorator {
         FontRenderContext frc = g2d.getFontRenderContext();
         LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);
         float wrappingWidth = (Slide.WIDTH - style.indent) * scale;
-        Point pen = new Point(x + (int)(style.indent * scale),
-                y + (int)(style.leading * scale));
+        Point pen = new Point(x + (int) (style.indent * scale),
+                y + (int) (style.leading * scale));
 
         // Color is now set via TextAttribute.FOREGROUND, but setting it
         // on g2d is still a good fallback or default if the attribute wasn't set.

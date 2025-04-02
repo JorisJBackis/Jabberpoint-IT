@@ -1,13 +1,9 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import javax.swing.JComponent;
+import javax.swing.*;
+import java.awt.*;
 
 public class SlideViewerComponent extends JComponent implements Observer {
 
-    private Presentation presentation;
+    private final Presentation presentation;
     private Font labelFont;
     private Color backgroundColor = Color.WHITE;
     private Color textColor = Color.BLACK;
@@ -25,7 +21,11 @@ public class SlideViewerComponent extends JComponent implements Observer {
     @Override
     public void update() {
         repaint();
-        System.out.println("Updated to slide: " + (presentation.getSlideNumber() + 1));
+        int currentSlide = presentation.getSlideNumber() + 1; // 1-based for user display
+        int totalSlides = presentation.getSize();
+        System.out.println("Updated to slide: " + currentSlide + " of " + totalSlides +
+                " | Can move next: " + (currentSlide < totalSlides) +
+                " | Can move prev: " + (currentSlide > 1));
     }
 
     @Override

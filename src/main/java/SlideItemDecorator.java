@@ -1,5 +1,4 @@
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.ImageObserver;
 
 /**
@@ -13,6 +12,7 @@ public abstract class SlideItemDecorator extends SlideItem {
 
     /**
      * Constructor for the SlideItemDecorator.
+     *
      * @param decoratedItem The SlideItem to be decorated.
      */
     public SlideItemDecorator(SlideItem decoratedItem) {

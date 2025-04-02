@@ -1,17 +1,10 @@
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.image.ImageObserver;
 import java.text.AttributedString;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A Concrete Decorator that adds underlining.
@@ -32,6 +25,7 @@ public class UnderlineTextDecorator extends SlideItemDecorator {
         while (innermostItem instanceof SlideItemDecorator) {
             if (innermostItem instanceof BoldTextDecorator) {
                 needsBold = true;
+                break;
             }
             // Add checks for other decorators if needed
             innermostItem = ((SlideItemDecorator) innermostItem).decoratedItem;
@@ -39,14 +33,13 @@ public class UnderlineTextDecorator extends SlideItemDecorator {
         // --- End unwrapping ---
 
         // Ensure the innermost item is actually a TextItem
-        if (!(innermostItem instanceof TextItem)) {
+        if (!(innermostItem instanceof TextItem textItem)) {
             // If not text, delegate drawing down the original chain
             // This ensures non-text items or improperly stacked items are still drawn.
             decoratedItem.draw(x, y, scale, g, style, observer);
             return;
         }
 
-        TextItem textItem = (TextItem) innermostItem;
         String text = textItem.getText();
 
         if (text == null || text.length() == 0) {
@@ -80,8 +73,8 @@ public class UnderlineTextDecorator extends SlideItemDecorator {
         FontRenderContext frc = g2d.getFontRenderContext();
         LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);
         float wrappingWidth = (Slide.WIDTH - style.indent) * scale;
-        Point pen = new Point(x + (int)(style.indent * scale),
-                y + (int)(style.leading * scale));
+        Point pen = new Point(x + (int) (style.indent * scale),
+                y + (int) (style.leading * scale));
 
         g2d.setColor(style.color); // Set color as fallback
 

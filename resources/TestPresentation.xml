@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE presentation SYSTEM "jabberpoint.dtd">
+<presentation>
+  <showtitle>Sample Test Presentation</showtitle>
+  
+  <slide>
+    <title>Introduction to XML Presentations</title>
+    <item kind="text" level="1">Welcome to this test presentation!</item>
+    <item kind="text" level="2">Created for testing XML loading</item>
+    <item kind="text" level="1">This file demonstrates:</item>
+    <item kind="text" level="2">Different text levels</item>
+    <item kind="text" level="2">Formatting options</item>
+    <item kind="text" level="2">Image support</item>
+  </slide>
+  
+  <slide>
+    <title>Text Formatting Options</title>
+    <item kind="text" level="1">Different types of text formatting:</item>
+    <item kind="text" level="2" bold="true">This text will appear bold</item>
+    <item kind="text" level="2" underline="true">This text will be underlined</item>
+    <item kind="text" level="2" bold="true" underline="true">Both bold and underlined!</item>
+    <item kind="text" level="1">Normal text continues here</item>
+  </slide>
+  
+  <slide>
+    <title>Different Levels Example</title>
+    <item kind="text" level="1">Level 1 - Main points</item>
+    <item kind="text" level="2">Level 2 - Supporting details</item>
+    <item kind="text" level="3">Level 3 - Additional information</item>
+    <item kind="text" level="4">Level 4 - Fine details</item>
+    <item kind="text" level="1">Back to Level 1</item>
+    <item kind="text" level="2">Another Level 2 item</item>
+  </slide>
+  
+  <slide>
+    <title>Final Slide</title>
+    <item kind="text" level="1">Thanks for testing!</item>
+    <item kind="text" level="2">You've successfully loaded an XML presentation</item>
+    <item kind="text" level="1">Questions?</item>
+    <item kind="text" level="2" bold="true">Contact: test@example.com</item>
+  </slide>
+  
+</presentation> 

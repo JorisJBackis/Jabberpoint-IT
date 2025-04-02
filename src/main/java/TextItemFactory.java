@@ -13,7 +13,7 @@ public class TextItemFactory implements SlideItemFactory {
     /**
      * Creates a TextItem using the provided level and data string.
      *
-     * @param level The indentation level for the TextItem.
+     * @param level    The indentation level for the TextItem.
      * @param textData The string content for the TextItem.
      * @return A new TextItem.
      */

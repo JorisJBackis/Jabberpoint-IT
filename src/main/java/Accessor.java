@@ -1,31 +1,40 @@
 import java.io.IOException;
 
 /**
- * <p>Een Accessor maakt het mogelijk om gegevens voor een presentatie
- * te lezen of te schrijven.</p>
- * <p>Niet-abstracte subklassen moeten de load en de save methode implementeren.</p>
- * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
- * @version 1.1 2002/12/17 Gert Florijn
- * @version 1.2 2003/11/19 Sylvia Stuurman
- * @version 1.3 2004/08/17 Sylvia Stuurman
- * @version 1.4 2007/07/16 Sylvia Stuurman
- * @version 1.5 2010/03/03 Sylvia Stuurman
- * @version 1.6 2014/05/16 Sylvia Stuurman
+ * This class helps us load and save presentations.
+ * Think of it as a helper that knows how to read and write presentation data.
+ * If you want to create your own type of loader, you'll need to extend this class
+ * and implement the loadFile and saveFile methods with your own code.
  */
-
 public abstract class Accessor {
-	public static final String DEMO_NAME = "Demonstration presentation";
-	public static final String DEFAULT_EXTENSION = ".xml";
+    public static final String DEMO_NAME = "Demonstration presentation";
+    public static final String DEFAULT_EXTENSION = ".xml";
 
-	public static Accessor getDemoAccessor() {
-		return new DemoPresentation();
-	}
+    /**
+     * The basic constructor - it doesn't do much, but we need it.
+     */
+    public Accessor() {
+    }
 
-	public Accessor() {
-	}
+    /**
+     * This gives you the accessor for loading the built-in demo presentation.
+     * It's a handy way to get a sample presentation without loading a file.
+     */
+    public static Accessor getDemoAccessor() {
+        return new DemoPresentation();
+    }
 
-	abstract public void loadFile(Presentation p, String fn) throws IOException;
+    /**
+     * This method loads a presentation from a file.
+     * You'll need to write this method in your subclass to explain exactly
+     * how to read your specific file format.
+     */
+    public abstract void loadFile(Presentation p, String fn) throws IOException;
 
-	abstract public void saveFile(Presentation p, String fn) throws IOException;
-
+    /**
+     * This method saves a presentation to a file.
+     * You'll need to write this method in your subclass to explain exactly
+     * how to write your specific file format.
+     */
+    public abstract void saveFile(Presentation p, String fn) throws IOException;
 }

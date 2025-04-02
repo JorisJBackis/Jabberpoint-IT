@@ -55,7 +55,7 @@ class SlideTest {
         assertEquals(1, slide.getSize(), "Size should be 1 after append(level, text)");
 
         SlideItem item = slide.getSlideItem(0);
-        assertTrue(item instanceof TextItem, "Appended item should be a TextItem");
+        assertInstanceOf(TextItem.class, item, "Appended item should be a TextItem");
         assertEquals(1, item.getLevel(), "TextItem level should be correct");
         assertEquals("Level 1 Text", ((TextItem) item).getText(), "TextItem text should be correct");
     }

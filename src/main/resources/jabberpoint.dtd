@@ -1,0 +1,11 @@
+<!ELEMENT presentation (showtitle, slide*)>
+        <!ELEMENT showtitle (#PCDATA)>
+        <!ELEMENT slide (title, item*)>
+        <!ELEMENT title (#PCDATA)>
+        <!ELEMENT item (#PCDATA)>
+        <!ATTLIST item
+                kind CDATA #REQUIRED
+                level CDATA #REQUIRED
+                bold CDATA #IMPLIED
+                underline CDATA #IMPLIED
+                >

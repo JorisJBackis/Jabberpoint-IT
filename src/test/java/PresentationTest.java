@@ -12,21 +12,6 @@ class PresentationTest {
     private Slide slide1;
     private Slide slide2;
 
-    // Simple Mock Observer to check if notifyObservers is called
-    class TestObserver implements Observer {
-        boolean updated = false;
-        @Override
-        public void update() {
-            updated = true;
-        }
-        public boolean wasUpdated() {
-            return updated;
-        }
-        public void reset() {
-            updated = false;
-        }
-    }
-
     @BeforeEach
     void setUp() {
         presentation = new Presentation("Test Presentation");
@@ -231,5 +216,23 @@ class PresentationTest {
         presentation.addSlide(slide2);
         presentation.nextSlide(); // Should not notify removed observer
         assertFalse(notified.get(), "Removed observer should not be notified");
+    }
+
+    // Simple Mock Observer to check if notifyObservers is called
+    class TestObserver implements Observer {
+        boolean updated = false;
+
+        @Override
+        public void update() {
+            updated = true;
+        }
+
+        public boolean wasUpdated() {
+            return updated;
+        }
+
+        public void reset() {
+            updated = false;
+        }
     }
 }
