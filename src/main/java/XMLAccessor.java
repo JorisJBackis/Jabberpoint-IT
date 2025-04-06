@@ -9,6 +9,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -72,13 +74,60 @@ public class XMLAccessor extends Accessor {
 	public void loadFile(Presentation presentation, String filename) throws IOException {
 		int slideNumber, itemNumber, max = 0, maxItems = 0;
 		try {
+			File xmlFile = new File(filename);
+			if (!xmlFile.exists()) {
+				System.err.println("XML file not found: " + xmlFile.getAbsolutePath());
+				throw new IOException("Cannot find file: " + filename);
+			}
+
+			System.out.println("Loading XML file from: " + xmlFile.getAbsolutePath());
+
+			// Create a factory with DTD validation disabled to avoid errors if DTD is missing
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			// Configure the parser to ignore DTD validation
-			factory.setValidating(false);
-			factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-			
+
+			// Set features to make parsing more lenient
+			try {
+				// Disable DTD validation
+				factory.setValidating(false);
+				// Disable external entity resolution (more secure too)
+				factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+				factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+				factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+			} catch (ParserConfigurationException e) {
+				// If feature isn't supported, log and continue without it
+				System.err.println("Warning: Some XML parser features aren't supported: " + e.getMessage());
+				// Non-fatal, continue with default factory settings
+			}
+
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder.parse(new File(filename)); // Create a DOM document
+
+			// Add custom error handler that logs but doesn't fail on DTD errors
+			builder.setErrorHandler(new ErrorHandler() {
+				@Override
+				public void warning(SAXParseException e) {
+					System.err.println("XML Parse Warning: " + e.getMessage());
+				}
+
+				@Override
+				public void error(SAXParseException e) {
+					// For DTD-related errors, just log them but don't fail
+					if (e.getMessage().contains("DOCTYPE") || e.getMessage().contains("DTD")) {
+						System.err.println("XML DTD-related error (continuing): " + e.getMessage());
+					} else {
+						// Other errors might be structure problems, so log more prominently
+						System.err.println("XML Error (non-fatal): " + e.getMessage());
+					}
+				}
+
+				@Override
+				public void fatalError(SAXParseException e) throws SAXException {
+					// Fatal errors we do need to throw - these are serious parsing problems
+					System.err.println("XML Fatal Error: " + e.getMessage());
+					throw e;
+				}
+			});
+
+			Document document = builder.parse(xmlFile); // Create a DOM document
 			Element doc = document.getDocumentElement();
 			presentation.setTitle(getTitle(doc, SHOWTITLE));
 
@@ -97,19 +146,18 @@ public class XMLAccessor extends Accessor {
 					loadSlideItem(slide, item); // Delegate item loading
 				}
 			}
-		}
-		catch (IOException iox) {
-			// Re-throw specific IOExceptions or handle more gracefully
+			System.out.println("Successfully loaded " + max + " slides from " + filename);
+		} catch (IOException iox) {
+			// Re-throw specific IOExceptions with more helpful messages
 			System.err.println("IOException during file load: " + iox.getMessage());
-			throw iox; // Or wrap in a custom exception
-		}
-		catch (SAXException sax) {
+			System.err.println("Make sure the XML file exists and is accessible");
+			throw new IOException("Error loading file: " + filename + " - " + iox.getMessage(), iox);
+		} catch (SAXException sax) {
 			System.err.println("SAXException (XML parsing error): " + sax.getMessage());
-			// Consider wrapping and re-throwing
-		}
-		catch (ParserConfigurationException pcx) {
+			throw new IOException("XML parsing error in " + filename + ": " + sax.getMessage(), sax);
+		} catch (ParserConfigurationException pcx) {
 			System.err.println(PCE + ": " + pcx.getMessage());
-			// Consider wrapping and re-throwing
+			throw new IOException("Parser configuration error: " + pcx.getMessage(), pcx);
 		}
 	}
 
@@ -182,12 +230,12 @@ public class XMLAccessor extends Accessor {
 		out.print("<showtitle>");
 		out.print(presentation.getTitle());
 		out.println("</showtitle>");
-		for (int slideNumber=0; slideNumber<presentation.getSize(); slideNumber++) {
+		for (int slideNumber = 0; slideNumber < presentation.getSize(); slideNumber++) {
 			Slide slide = presentation.getSlide(slideNumber);
 			out.println("<slide>");
 			out.println("<title>" + slide.getTitle() + "</title>");
 			Vector<SlideItem> slideItems = slide.getSlideItems();
-			for (int itemNumber = 0; itemNumber<slideItems.size(); itemNumber++) {
+			for (int itemNumber = 0; itemNumber < slideItems.size(); itemNumber++) {
 				SlideItem slideItem = slideItems.elementAt(itemNumber);
 
 				// --- Handle potential Decorators during save ---
@@ -221,14 +269,14 @@ public class XMLAccessor extends Accessor {
 					if (isUnderlined) out.print(" " + UNDERLINE + "=\"true\"");
 					out.print(">");
 					// Make sure to get text from the *base* TextItem
-					out.print( ((TextItem) itemToSave).getText());
+					out.print(((TextItem) itemToSave).getText());
 				}
 				else if (itemToSave instanceof BitmapItem) {
 					out.print("\"" + IMAGE + "\" level=\"" + slideItem.getLevel() + "\""); // Use original level
 					// Add image decorator attributes here if needed
 					out.print(">");
 					// Make sure to get name from the *base* BitmapItem
-					out.print( ((BitmapItem) itemToSave).getName());
+					out.print(((BitmapItem) itemToSave).getName());
 				}
 				else {
 					System.out.println("Ignoring unknown item type during save: " + slideItem);

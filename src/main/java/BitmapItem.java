@@ -31,12 +31,32 @@ public class BitmapItem extends SlideItem {
 	public BitmapItem(int level, String name) {
 		super(level);
 		imageName = name;
-		try {
-			bufferedImage = ImageIO.read(new File(imageName));
-		}
-		catch (IOException e) {
-			System.err.println(FILE + imageName + NOTFOUND) ;
-		}
+		
+		// First try to load from current directory (relative path)
+        try {
+            File imageFile = new File(imageName);
+            if (imageFile.exists()) {
+                bufferedImage = ImageIO.read(imageFile);
+            } else {
+                // If not found, try in the project's base directory
+                File projectBaseFile = new File("resources", imageName);
+                if (projectBaseFile.exists()) {
+                    bufferedImage = ImageIO.read(projectBaseFile);
+                } else {
+                    // If still not found, try an alternative location
+                    File alternativeFile = new File("src/main/resources", imageName);
+                    if (alternativeFile.exists()) {
+                        bufferedImage = ImageIO.read(alternativeFile);
+                    } else {
+                        System.err.println("Tried multiple paths, but couldn't find: " + imageName);
+                        System.err.println("Searched in: ., ./resources, ./src/main/resources");
+                        throw new IOException("Image file not found in any standard location");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println(FILE + imageName + NOTFOUND + ": " + e.getMessage());
+        }
 	}
 
 // An empty bitmap-item

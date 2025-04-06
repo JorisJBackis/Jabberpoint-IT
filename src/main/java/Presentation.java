@@ -78,6 +78,22 @@ public class Presentation {
 		}
 	}
 
+	/**
+	 * Checks if we're currently on the first slide.
+	 * @return true if we're at the first slide, false otherwise
+	 */
+	public boolean isFirstSlide() {
+		return currentSlideNumber == 0;
+	}
+
+	/**
+	 * Checks if we're currently on the last slide.
+	 * @return true if we're at the last slide, false otherwise
+	 */
+	public boolean isLastSlide() {
+		return slides.size() > 0 && currentSlideNumber == slides.size() - 1;
+	}
+
 	public void clear() {
 		slides = new ArrayList<>();
 		currentSlideNumber = 0;

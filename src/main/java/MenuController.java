@@ -11,14 +11,24 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
+/**
+ * This class handles all the menus in the application.
+ * It creates the menu structure and manages what happens when you click on menu items.
+ * It also keeps track of the presentation to update menu items (like enabling/disabling
+ * the Next button when you reach the last slide).
+ */
 public class MenuController extends MenuBar implements Observer {
 
-    private Frame parent;
-    private Presentation presentation;
+    private final Frame parent;
+    private final Presentation presentation;
     private MenuItem nextMenuItem;
     private MenuItem prevMenuItem;
     private MenuItem saveMenuItem;
 
+    /**
+     * We create a new MenuController with the main window and the presentation.
+     * This sets up all the menus and connects them to the right actions.
+     */
     public MenuController(Frame frame, Presentation pres) {
         parent = frame;
         presentation = pres;
@@ -26,6 +36,13 @@ public class MenuController extends MenuBar implements Observer {
         setupMenus();
     }
 
+    /**
+     * This creates all the menus and menu items with their actions.
+     * We create three main menus:
+     * - File menu (Open, New, Save, Exit)
+     * - View menu (Next, Prev, Go to)
+     * - Help menu (About)
+     */
     private void setupMenus() {
         Menu fileMenu = new Menu("File");
         MenuItem openItem = new MenuItem("Open", new MenuShortcut('O'));
@@ -33,19 +50,52 @@ public class MenuController extends MenuBar implements Observer {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                    "XML Files", "xml");
+                        "XML Files", "xml");
                 fileChooser.setFileFilter(filter);
+
+                // Try to start in the user's desktop directory for easier access
+                try {
+                    String userHome = System.getProperty("user.home");
+                    File desktop = new File(userHome, "Desktop");
+                    if (desktop.exists()) {
+                        fileChooser.setCurrentDirectory(desktop);
+                    }
+                } catch (Exception ex) {
+                    // If there's any error setting the directory, just use the default
+                    System.err.println("Could not set file chooser to Desktop: " + ex.getMessage());
+                }
+
                 int returnVal = fileChooser.showOpenDialog(parent);
-                
+
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     presentation.clear();
                     try {
                         File file = fileChooser.getSelectedFile();
-                        new XMLAccessor().loadFile(presentation, file.getAbsolutePath());
+
+                        if (!file.exists()) {
+                            JOptionPane.showMessageDialog(
+                                    parent,
+                                    "The file '" + file.getName() + "' does not exist.",
+                                    "File Not Found",
+                                    JOptionPane.ERROR_MESSAGE
+                            );
+                            return;
+                        }
+
+                        System.out.println("Attempting to open file: " + file.getAbsolutePath());
+                        XMLAccessor xmlAccessor = new XMLAccessor();
+                        xmlAccessor.loadFile(presentation, file.getAbsolutePath());
                         presentation.setSlideNumber(0);
+                        System.out.println("Successfully opened presentation with " +
+                                presentation.getSize() + " slides");
                     } catch (IOException exc) {
-                        JOptionPane.showMessageDialog(parent, "IO Exception: " + exc, 
-                            "Load Error", JOptionPane.ERROR_MESSAGE);
+                        System.err.println("ERROR: " + exc.getMessage());
+                        JOptionPane.showMessageDialog(
+                                parent,
+                                "Could not load the file:\n" + exc.getMessage(),
+                                "Load Error",
+                                JOptionPane.ERROR_MESSAGE
+                        );
                     }
                     parent.repaint();
                 }
@@ -63,11 +113,26 @@ public class MenuController extends MenuBar implements Observer {
         saveMenuItem = new MenuItem("Save", new MenuShortcut('S'));
         saveMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    new XMLAccessor().saveFile(presentation, "dump.xml");
-                } catch (IOException exc) {
-                    JOptionPane.showMessageDialog(parent, "IO Exception: " + exc, 
-                        "Save Error", JOptionPane.ERROR_MESSAGE);
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "XML Files", "xml");
+                fileChooser.setFileFilter(filter);
+                int returnVal = fileChooser.showSaveDialog(parent);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        File file = fileChooser.getSelectedFile();
+                        String path = file.getAbsolutePath();
+                        // Ensure file has .xml extension
+                        if (!path.toLowerCase().endsWith(".xml")) {
+                            path += ".xml";
+                        }
+                        XMLAccessor xmlAccessor = new XMLAccessor();
+                        xmlAccessor.saveFile(presentation, path);
+                    } catch (IOException exc) {
+                        JOptionPane.showMessageDialog(parent, "IO Exception: " + exc,
+                                "Save Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -96,6 +161,10 @@ public class MenuController extends MenuBar implements Observer {
                     return;
                 }
                 try {
+                    if (pageNumberStr == null || pageNumberStr.trim().isEmpty()) {
+                        return; // User canceled or entered nothing
+                    }
+
                     int pageNumber = Integer.parseInt(pageNumberStr);
                     if (pageNumber < 1 || pageNumber > presentation.getSize()) {
                         JOptionPane.showMessageDialog(parent, 
@@ -122,14 +191,30 @@ public class MenuController extends MenuBar implements Observer {
         updateMenuState();
     }
 
+    /**
+     * This updates the menu items based on where we are in the presentation.
+     * For example, the Next button is disabled when we're on the last slide,
+     * and the Prev button is disabled on the first slide.
+     */
     private void updateMenuState() {
         int slideNumber = presentation.getSlideNumber();
         int slideCount = presentation.getSize();
+
+        // More detailed diagnostic info
+        System.out.println("MenuController: Updating menu state - Current slide: " + (slideNumber + 1) +
+                " of " + slideCount);
+        System.out.println("  - Next button enabled: " + (slideNumber < slideCount - 1));
+        System.out.println("  - Prev button enabled: " + (slideNumber > 0));
+
         nextMenuItem.setEnabled(slideNumber < slideCount - 1);
         prevMenuItem.setEnabled(slideNumber > 0);
         saveMenuItem.setEnabled(slideCount > 0);
     }
 
+    /**
+     * This gets called whenever the presentation changes.
+     * When that happens, we need to update our menu items.
+     */
     @Override
     public void update() {
         updateMenuState();
