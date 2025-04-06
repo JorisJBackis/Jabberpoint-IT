@@ -52,9 +52,10 @@ public class BitmapItem extends SlideItem {
 // give the  bounding box of the image
 	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle) {
 		if (bufferedImage == null) {
+			int x = 0;
 			int width = (int) (myStyle.indent * scale);
 			int height = (int) (myStyle.leading * scale);
-			return new Rectangle(width, 0, width, height);
+			return new Rectangle(x, 0, width, height);
 		}
 		return new Rectangle((int) (myStyle.indent * scale), 0,
 				(int) (bufferedImage.getWidth(observer) * scale),
