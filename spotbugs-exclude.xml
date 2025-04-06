@@ -1,0 +1,15 @@
+<FindBugsFilter>
+    <!-- EI_EXPOSE_REP2: Accept risk of storing mutable Frame, Presentation, -->
+    <!-- SlideViewerComponent refs in this simple GUI context. -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+
+    <!-- EI_EXPOSE_REP: Accept risk of returning mutable SlideViewerComponent -->
+    <!-- from Presentation.getShowView() in this context. -->
+    <Match>
+        <Class name="Presentation"/>
+        <Method name="getShowView"/>
+        <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+</FindBugsFilter>

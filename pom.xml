@@ -70,12 +70,18 @@
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.8.6.0</version>
+                <configuration>
+                    <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
