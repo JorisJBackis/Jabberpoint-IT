@@ -35,7 +35,7 @@ jobs:
         run: mvn test
 
       - name: Run SpotBugs
-        run: mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.3.0:check
+        run: mvn spotbugs:check
 
       - name: Upload test report
         if: always()
