@@ -72,7 +72,12 @@ public class XMLAccessor extends Accessor {
 	public void loadFile(Presentation presentation, String filename) throws IOException {
 		int slideNumber, itemNumber, max = 0, maxItems = 0;
 		try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			// Configure the parser to ignore DTD validation
+			factory.setValidating(false);
+			factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			
+			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(new File(filename)); // Create a DOM document
 			Element doc = document.getDocumentElement();
 			presentation.setTitle(getTitle(doc, SHOWTITLE));

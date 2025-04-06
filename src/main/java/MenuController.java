@@ -80,11 +80,11 @@ public class MenuController extends MenuBar implements Observer {
         add(fileMenu);
 
         Menu viewMenu = new Menu("View");
-        nextMenuItem = new MenuItem("Next", new MenuShortcut('>'));
+        nextMenuItem = new MenuItem("Next", new MenuShortcut('N', true));
         nextMenuItem.addActionListener(e -> presentation.nextSlide());
         viewMenu.add(nextMenuItem);
 
-        prevMenuItem = new MenuItem("Prev", new MenuShortcut('<'));
+        prevMenuItem = new MenuItem("Prev", new MenuShortcut('P', true));
         prevMenuItem.addActionListener(e -> presentation.prevSlide());
         viewMenu.add(prevMenuItem);
 
@@ -92,11 +92,21 @@ public class MenuController extends MenuBar implements Observer {
         gotoItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String pageNumberStr = JOptionPane.showInputDialog("Page number?");
+                if (pageNumberStr == null) {
+                    return;
+                }
                 try {
                     int pageNumber = Integer.parseInt(pageNumberStr);
+                    if (pageNumber < 1 || pageNumber > presentation.getSize()) {
+                        JOptionPane.showMessageDialog(parent, 
+                            "Invalid slide number: " + pageNumber + "\nValid range is 1-" + presentation.getSize(), 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     presentation.setSlideNumber(pageNumber - 1);
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(parent, "Invalid number: " + pageNumberStr);
+                    JOptionPane.showMessageDialog(parent, "Invalid number: " + pageNumberStr, 
+                        "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
