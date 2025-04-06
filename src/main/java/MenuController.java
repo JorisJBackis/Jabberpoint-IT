@@ -23,7 +23,7 @@ import java.io.File;
 public class MenuController extends MenuBar implements Observer {
 
     private final Frame parent;
-    private final Presentation presentation;
+    private transient final Presentation presentation;
     private MenuItem nextMenuItem;
     private MenuItem prevMenuItem;
     private MenuItem saveMenuItem;
