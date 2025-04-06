@@ -31,8 +31,9 @@ public class MenuController extends MenuBar implements Observer {
 
     // --- Factories/Readers/Writers (Instantiated here for simplicity) ---
     // In a larger app, these might be injected (Dependency Injection)
-    private final PresentationReader xmlReader = new XMLPresentationReader();
-    private final PresentationWriter xmlWriter = new XMLPresentationWriter();
+    // Mark as transient to satisfy SpotBugs SE_BAD_FIELD_STORE
+    private transient final PresentationReader xmlReader = new XMLPresentationReader();
+    private transient final PresentationWriter xmlWriter = new XMLPresentationWriter();
     // ---
 
     /**
