@@ -7,7 +7,7 @@ import javax.swing.JComponent;
 
 public class SlideViewerComponent extends JComponent implements Observer {
 
-    private Presentation presentation;
+    private final Presentation presentation;
     private Font labelFont;
     private Color backgroundColor = Color.WHITE;
     private Color textColor = Color.BLACK;

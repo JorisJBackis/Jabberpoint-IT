@@ -75,7 +75,8 @@ public class KeyController extends KeyAdapter {
                 break;
             case 'q':
             case 'Q':
-                System.exit(0);
+                //Delegate to Presentation's exit logic
+                presentation.exit(0);
                 break;
             default:
                 break;

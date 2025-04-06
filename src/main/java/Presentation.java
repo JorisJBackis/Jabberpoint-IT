@@ -5,7 +5,7 @@ public class Presentation {
 	private String title;               // title of the presentation
 	private List<Slide> slides;         // list of slides
 	private int currentSlideNumber;     // the current slide number
-	private List<Observer> observers;   // list of observers
+	private final List<Observer> observers;   // list of observers
 	private SlideViewerComponent showView; // the view component
 
 	public Presentation(String title) {
