@@ -30,6 +30,12 @@ public class BitmapItem extends SlideItem {
 // level is equal to item-level; name is the name of the file with the Image
 	public BitmapItem(int level, String name) {
 		super(level);
+		if (name == null) {
+			System.err.println("ERROR: Attempted to create BitmapItem with null image name. Level: " + level);
+			this.imageName = "INVALID_NULL_NAME"; // Assign a placeholder
+			this.bufferedImage = null; // Ensure image is null
+			return; // Stop constructor execution here
+		}
 		imageName = name;
 		
 		// First try to load from current directory (relative path)
@@ -57,11 +63,6 @@ public class BitmapItem extends SlideItem {
         } catch (IOException e) {
             System.err.println(FILE + imageName + NOTFOUND + ": " + e.getMessage());
         }
-	}
-
-// An empty bitmap-item
-	public BitmapItem() {
-		this(0, null);
 	}
 
 // give the filename of the image
