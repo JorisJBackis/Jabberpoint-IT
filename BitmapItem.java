@@ -62,7 +62,7 @@ public class BitmapItem extends SlideItem {
         return imageName;
     }
 
-    // give the  bounding box of the image
+    // give the bounding box of the image
     public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style myStyle) {
         if (bufferedImage == null) {
             int x = 0;
