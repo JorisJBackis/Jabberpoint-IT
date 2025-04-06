@@ -158,10 +158,10 @@ public class MenuController extends MenuBar implements Observer {
             public void actionPerformed(ActionEvent e) {
                 String pageNumberStr = JOptionPane.showInputDialog("Page number?");
                 if (pageNumberStr == null) {
-                    return;
+                    return; // User cancelled
                 }
                 try {
-                    if (pageNumberStr == null || pageNumberStr.trim().isEmpty()) {
+                    if (pageNumberStr.trim().isEmpty()) {
                         return; // User canceled or entered nothing
                     }
 

@@ -50,7 +50,7 @@ public class Slide {
 
 	// give all SlideItems in a Vector
 	public Vector<SlideItem> getSlideItems() {
-		return items;
+		return (Vector<SlideItem>) items.clone();
 	}
 
 	// give the size of the Slide

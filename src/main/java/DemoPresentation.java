@@ -39,42 +39,32 @@ class DemoPresentation extends Accessor {
 		presentation.addSlide(slide);
 
 		slide = new Slide();
-		slide.setTitle("Demonstration with Bold");
-
-		slide = new Slide();
 		slide.setTitle("Decorator Pattern Demo");
 
 		// Original item
 		slide.append(1, "This is standard level 1 text.");
 
-		// Create a TextItem
+		// Create a bold TextItem
 		TextItem boldItem = new TextItem(2, "This level 2 text is BOLD.");
-		// Decorate it with BoldTextDecorator
 		SlideItem decoratedBold = new BoldTextDecorator(boldItem);
-		// Add the decorated item to the slide
 		slide.append(decoratedBold);
 
-		// Create another TextItem
+		// Create an underscored TextItem
 		TextItem underlineItem = new TextItem(2, "This level 2 text is UNDERLINED.");
-		// Decorate it with UnderlineTextDecorator
 		SlideItem decoratedUnderline = new UnderlineTextDecorator(underlineItem);
-		// Add the decorated item
 		slide.append(decoratedUnderline);
 
 		// Demonstrate chaining decorators: Bold AND Underlined
 		TextItem boldAndUnderlineItem = new TextItem(3, "This level 3 text is BOLD and UNDERLINED.");
-		// Wrap with Bold first
 		SlideItem decoratedWithBold = new BoldTextDecorator(boldAndUnderlineItem);
-		// Wrap the already-bold item with Underline
 		SlideItem decoratedWithBoth = new UnderlineTextDecorator(decoratedWithBold);
-		// Add the doubly-decorated item
 		slide.append(decoratedWithBoth);
 
 
 		presentation.addSlide(slide);
 
 		slide = new Slide();
-		slide.setTitle("The third slide");
+		slide.setTitle("The fourth and final slide");
 		slide.append(1, "To open a new presentation,");
 		slide.append(2, "use File->Open from the menu.");
 		slide.append(1, " ");
