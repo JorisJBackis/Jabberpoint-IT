@@ -118,7 +118,7 @@ jobs:
       - name: Checkout code (Test)
         uses: actions/checkout@v4
         with:
-          ref: 'test' # Explicitly checkout test.
+          ref: 'test' # Explicitly checkout test
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
