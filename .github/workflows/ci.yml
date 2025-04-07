@@ -1,5 +1,9 @@
 name: CI/CD Pipeline
 
+permissions:
+  contents: write # Allow action to write repository content (push commits)
+  pull-requests: read # Keep default read for PR checks if needed
+
 on:
   # Trigger ONLY on pushes to the development branch
   push:
