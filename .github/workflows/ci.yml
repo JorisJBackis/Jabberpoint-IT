@@ -108,8 +108,9 @@ jobs:
   # (which itself was triggered by the previous job)
   promote-test-to-acceptance:
     runs-on: ubuntu-latest
-    needs: build-and-test
-    # Condition: Must be a push to test AND build-and-test succeeded
+    needs:
+      - build-and-test
+      - promote-dev-to-test
     if: needs.promote-dev-to-test.result == 'success'
 
 
