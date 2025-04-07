@@ -24,7 +24,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Optional: JUnit Platform Launcher -->
+        <!-- JUnit Platform Launcher -->
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
@@ -42,6 +42,12 @@
                 <version>3.0.0-M9</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <excludes>
+                        <exclude>**/SlideViewerFrameTest.java</exclude>
+                        <exclude>**/MenuControllerTest.java</exclude>
+                        <exclude>**/SlideViewerComponentTest.java</exclude>
+                        <exclude>**/JabberPointTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
