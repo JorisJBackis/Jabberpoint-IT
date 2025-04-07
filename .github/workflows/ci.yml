@@ -105,7 +105,7 @@ jobs:
 
   # === Job: Promote Test to Acceptance ===
   # Runs ONLY after a successful build-and-test triggered by a push to test
-  # (which itself was triggered by the previous job)
+  # (which itself was triggered by the previous jobb)
   promote-test-to-acceptance:
     runs-on: ubuntu-latest
     needs: build-and-test
