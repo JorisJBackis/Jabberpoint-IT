@@ -99,4 +99,15 @@ class StyleTest {
         // Check if style (PLAIN) is preserved - assumes base font is PLAIN
         assertEquals(Font.PLAIN, derivedFont.getStyle(), "Derived font style should match base style");
     }
+
+    @Test
+    @DisplayName("toString should produce non-empty representation")
+    void testToString() {
+        Style style = Style.getStyle(2);
+        String styleString = style.toString();
+        assertNotNull(styleString, "toString() should not return null");
+        assertFalse(styleString.isEmpty(), "toString() should return a non-empty string");
+        assertTrue(styleString.contains("50"), "toString() should contain indent info"); // Check for indent value
+        assertTrue(styleString.contains("36"), "toString() should contain font size info"); // Check for font size value
+    }
 }

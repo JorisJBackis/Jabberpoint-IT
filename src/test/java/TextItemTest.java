@@ -22,7 +22,8 @@ class TextItemTest {
         TextItem item = new TextItem();
         assertEquals(0, item.getLevel(), "Default level should be 0");
         // Check against the known default text constant if accessible, otherwise the literal string
-        assertEquals("No Text Given", item.getText(), "Default text should be 'No Text Given'");
+        String defaultText = item.getText();
+        assertEquals("No Text Given", defaultText, "Default text should be 'No Text Given'");
     }
 
     @Test
@@ -78,5 +79,23 @@ class TextItemTest {
     void testToStringDefaultConstructor() {
         TextItem item = new TextItem();
         assertEquals("TextItem[0,No Text Given]", item.toString());
+    }
+
+    @Test
+    @DisplayName("getAttributedString should return string with correct font")
+    void testGetAttributedString() {
+        TextItem item = new TextItem(1, "Test String");
+        Style style = Style.getStyle(1);
+        float scale = 1.2f;
+        java.awt.font.TextAttribute expectedFontAttribute = java.awt.font.TextAttribute.FONT;
+        java.awt.Font expectedFont = style.getFont(scale);
+
+        java.text.AttributedString attrString = item.getAttributedString(style, scale);
+        assertNotNull(attrString, "AttributedString should not be null");
+
+        // Check if the FONT attribute is set correctly
+        java.text.AttributedCharacterIterator iterator = attrString.getIterator();
+        assertEquals(expectedFont, iterator.getAttribute(expectedFontAttribute),
+                     "Font attribute in AttributedString should match scaled style font");
     }
 }
